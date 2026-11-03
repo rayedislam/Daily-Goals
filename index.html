@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Daily Goals</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);--b1:#ffdff0;--b2:#dce8ff;--b3:#d9ffee;--card:rgba(255,255,255,.8);--tx:#25214a;--mu:#6b6890;--ln:rgba(80,70,160,.15);--ts:92%;--tl:93%}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--b1:#2b1244;--b2:#10224f;--b3:#0b3a3c;--card:rgba(30,28,62,.8);--tx:#f3f1ff;--mu:#b0acdc;--ln:rgba(255,255,255,.15);--ts:50%;--tl:22%}}
+:root[data-theme="light"]{color-scheme:light}
+:root[data-theme="dark"]{color-scheme:dark;--b1:#2b1244;--b2:#10224f;--b3:#0b3a3c;--card:rgba(30,28,62,.8);--tx:#f3f1ff;--mu:#b0acdc;--ln:rgba(255,255,255,.15);--ts:50%;--tl:22%}
+*{box-sizing:border-box}
+body{margin:0;font-family:Poppins,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--tx);background:linear-gradient(130deg,var(--b1),var(--b2),var(--b3),var(--b1));background-size:300% 300%;animation:bg 18s ease infinite;overflow-x:hidden}
+.blob{position:fixed;border-radius:50%;filter:blur(70px);opacity:.55;z-index:-1;animation:float 13s ease-in-out infinite alternate}
+.wrap{max-width:980px;margin:0 auto;padding:22px 14px 44px}
+.tg{position:absolute;top:calc(env(safe-area-inset-top,0px) + 14px);right:14px;z-index:5;width:68px;height:34px;border:0;padding:0;border-radius:99px;cursor:pointer;background:linear-gradient(90deg,#ffd93d,#ff9a3c);box-shadow:0 6px 16px rgba(255,154,60,.45);transition:transform .25s}
+.tg:hover{transform:scale(1.07)}.tg:active{transform:scale(.95)}
+.tg:focus-visible{outline:3px solid var(--tx);outline-offset:3px}
+.tg b{position:absolute;top:3px;left:3px;width:28px;height:28px;border-radius:50%;background:#fff;display:grid;place-items:center;font-size:16px;box-shadow:0 2px 8px rgba(0,0,0,.3);transition:transform .55s cubic-bezier(.3,1.4,.5,1)}
+.tg b::after{content:"☀️"}
+.tg.dk{background:linear-gradient(90deg,#4b3bbf,#7a5cff);box-shadow:0 6px 16px rgba(122,92,255,.5)}
+.tg.dk b{transform:translateX(34px) rotate(360deg)}.tg.dk b::after{content:"🌙"}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.5s}
+@media(max-width:600px){header{padding-top:34px}}
+header{text-align:center}
+h1{margin:0;font-size:clamp(34px,9vw,62px);font-weight:800;letter-spacing:-1px}
+.em{display:inline-block;animation:bob 2.2s ease-in-out infinite}
+.grad{background:linear-gradient(90deg,#ff4d8d,#ff9a3c,#f5c400,#2ecc71,#27c3ff,#7a5cff,#ff4d8d);background-size:300%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s linear infinite}
+.sub{margin:4px 0 0;color:var(--mu);font-weight:600}
+.stats{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin:18px 0 10px}
+.st{background:var(--card);border-radius:18px;padding:10px 18px;min-width:112px;border-bottom:4px solid var(--c);animation:in .6s both}
+.st b{display:block;font-size:22px;color:var(--c)}.st span{font-size:12px;color:var(--mu)}
+.start{display:inline-flex;align-items:center;gap:8px;background:var(--card);padding:6px 8px 6px 14px;border-radius:99px;font-size:13px;font-weight:600}
+.start input,select{font:inherit;color:var(--tx);background:transparent;border:2px solid var(--ln);border-radius:12px;padding:5px 8px}
+select option{color:#000;background:#fff}
+.strip{display:flex;gap:10px;overflow-x:auto;padding:18px 6px 14px;scroll-snap-type:x proximity}
+.chip{position:relative;flex:0 0 78px;scroll-snap-align:center;text-align:center;font:inherit;color:var(--tx);border:2px solid transparent;background:var(--card);border-radius:18px;padding:10px 4px 9px;cursor:pointer;transition:transform .3s cubic-bezier(.3,1.5,.5,1),box-shadow .3s,background .3s}
+.chip:hover{transform:translateY(-4px)}
+.chip small{display:block;font-size:10px;font-weight:600;color:hsl(var(--h) 80% 52%)}
+.chip b{display:block;font-size:24px;line-height:1.15}.chip span{font-size:11px;color:var(--mu)}
+.chip i{display:block;height:5px;border-radius:9px;background:var(--ln);margin:8px 6px 0;overflow:hidden}
+.chip u{display:block;height:100%;width:0;background:hsl(var(--h) 85% 55%);transition:width .6s}
+.chip.now{outline:2px dashed hsl(var(--h) 85% 55%);outline-offset:2px}
+.chip.on{background:linear-gradient(145deg,hsl(var(--h) 90% 60%),hsl(calc(var(--h) + 45) 90% 55%));transform:translateY(-4px) scale(1.07);box-shadow:0 10px 24px hsl(var(--h) 85% 55%/.45)}
+.chip.on small,.chip.on span,.chip.on b{color:#fff}.chip.on i{background:rgba(255,255,255,.35)}.chip.on u{background:#fff}
+.chip.ok::after{content:"⭐";position:absolute;top:-8px;right:-4px;font-size:16px;animation:pop .6s}
+.card{background:var(--card);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-radius:26px;padding:clamp(16px,4vw,30px);box-shadow:0 14px 40px rgba(90,70,200,.18);border:1px solid var(--ln)}
+#card.swap{animation:swap .5s cubic-bezier(.2,.8,.2,1)}
+#card.full{animation:glow 2.4s ease-in-out infinite}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.top h2{margin:0;font-size:clamp(18px,4.4vw,27px)}.top p{margin:2px 0 0;color:var(--mu);font-size:14px}
+.btn{border:0;border-radius:99px;padding:11px 22px;font:inherit;font-weight:600;color:#fff;cursor:pointer;background:linear-gradient(90deg,#ff4d8d,#ff9a3c);box-shadow:0 6px 16px rgba(255,77,141,.35);transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px) scale(1.04)}.btn:active{transform:scale(.96)}
+.btn.ghost{background:linear-gradient(90deg,#7a5cff,#27c3ff);box-shadow:0 6px 16px rgba(122,92,255,.35)}
+.btn.danger{background:linear-gradient(90deg,#ff5f6d,#ffc371)}
+.prog{display:flex;align-items:center;gap:14px;margin:18px 0 14px;flex-wrap:wrap}
+.bar{flex:1 1 200px;height:16px;border-radius:99px;background:var(--ln);overflow:hidden}
+#pf{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#ff4d8d,#ff9a3c,#f5c400,#2ecc71,#27c3ff,#7a5cff);background-size:200%;transition:width .7s cubic-bezier(.2,.8,.2,1);animation:shine2 3s linear infinite alternate}
+#pt{font-weight:600;font-size:14px}
+#list{display:grid;gap:10px 14px}
+@media(min-width:820px){#list{grid-template-columns:1fr 1fr}}
+.task{position:relative;display:flex;align-items:center;gap:14px;padding:14px 16px;border-radius:16px;cursor:pointer;background:hsl(var(--h) var(--ts) var(--tl));border-left:6px solid hsl(var(--h) 85% 55%);animation:in .5s cubic-bezier(.2,.8,.2,1) backwards;animation-delay:calc(var(--i)*45ms);transition:transform .45s cubic-bezier(.22,1,.36,1),box-shadow .45s ease;will-change:transform}
+.task:hover{transform:translateX(6px);box-shadow:0 8px 22px hsl(var(--h) 85% 55%/.28)}
+.task input{position:absolute;opacity:0;pointer-events:none}
+.box{flex:none;width:30px;height:30px;border-radius:10px;border:2.5px solid hsl(var(--h) 85% 55%);display:grid;place-items:center;transition:background .3s}
+.box svg{width:20px;fill:none;stroke:#fff;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset .35s .1s}
+.task input:checked+.box{background:hsl(var(--h) 85% 55%);animation:pop .45s}
+.task input:checked+.box svg{stroke-dashoffset:0}
+.task input:focus-visible+.box{outline:3px solid var(--tx);outline-offset:2px}
+.tx{flex:1;font-weight:600;font-size:15px;line-height:1.4;background:linear-gradient(currentColor,currentColor) no-repeat 0 58%/0 2px;transition:background-size .45s,opacity .4s}
+.done .tx{background-size:100% 2px;opacity:.55}
+.mu{color:var(--mu)}
+.ed{display:flex;gap:8px;animation:in .4s backwards;animation-delay:calc(var(--i)*30ms);transition:opacity .25s,transform .25s}
+.ed.out{opacity:0;transform:scale(.9)}
+.ed input{flex:1;min-width:0;padding:12px 14px;border-radius:14px;border:2px solid hsl(var(--h) 80% 60%);background:var(--card);color:var(--tx);font:inherit;font-size:14px}
+.x{border:0;border-radius:12px;width:44px;background:#ff5f6d;color:#fff;font-size:16px;cursor:pointer;transition:transform .2s}.x:hover{transform:rotate(90deg) scale(1.1)}
+.add{grid-column:1/-1;justify-self:start;background:linear-gradient(90deg,#2ecc71,#27c3ff);box-shadow:0 6px 16px rgba(46,204,113,.35)}
+.apply{grid-column:1/-1;display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap;font-size:14px;font-weight:600}
+.reset{margin-top:22px;text-align:center}.reset p{margin:10px 0 0;font-size:13px;color:var(--mu)}
+#ov{position:fixed;inset:0;display:none;place-items:center;background:rgba(20,10,50,.55);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);z-index:50;padding:20px}
+#ov.on{display:grid;animation:fade .3s}
+#mb{width:min(420px,100%);text-align:center;background:var(--card);background-color:var(--b2);border-radius:28px;padding:30px 24px;box-shadow:0 20px 60px rgba(0,0,0,.35);animation:zoom .55s cubic-bezier(.3,1.5,.5,1)}
+#mb h3{margin:8px 0;font-size:clamp(26px,7vw,36px);font-weight:800}#mb p{color:var(--mu);line-height:1.6}
+.big{font-size:54px}.trophy{font-size:84px;animation:trophy 1.6s ease-in-out infinite}
+.acts{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+#fx{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:99}
+@keyframes bg{50%{background-position:100% 50%}}
+@keyframes float{to{transform:translate(40px,-60px) scale(1.25)}}
+@keyframes bob{50%{transform:translateY(-8px) rotate(12deg)}}
+@keyframes shine{to{background-position:300% 0}}
+@keyframes shine2{to{background-position:100% 0}}
+@keyframes in{from{opacity:0;transform:translateY(18px) scale(.97)}}
+@keyframes pop{40%{transform:scale(1.3) rotate(8deg)}}
+@keyframes fade{from{opacity:0}}
+@keyframes zoom{from{opacity:0;transform:scale(.6) translateY(40px)}}
+@keyframes swap{from{opacity:.4;transform:translateX(24px)}}
+@keyframes glow{50%{box-shadow:0 0 0 4px #ffd93d,0 0 40px 8px rgba(255,77,141,.5)}}
+@keyframes trophy{50%{transform:translateY(-12px) rotate(-8deg) scale(1.08)}}
+</style>
+</head>
+<body>
+<div class="blob" style="width:340px;height:340px;background:#ff7ab8;top:-80px;left:-80px"></div>
+<div class="blob" style="width:380px;height:380px;background:#6fa8ff;top:35%;right:-120px;animation-delay:-4s"></div>
+<div class="blob" style="width:320px;height:320px;background:#5fe3b0;bottom:-90px;left:25%;animation-delay:-8s"></div>
+<canvas id="fx"></canvas>
+<button class="tg" id="th" role="switch" aria-checked="false" aria-label="Dark mode" title="Switch Dark / Light mode"><b></b></button>
+<div class="wrap">
+<header>
+<h1><span class="em">🎯</span> <span class="grad">Daily Goals</span></h1>
+<p class="sub">Your 30-day habit planner. Small steps, big results!</p>
+<div class="stats">
+<div class="st" style="--c:#ff4d8d"><b id="s1">0 / 30</b><span>Days completed</span></div>
+<div class="st" style="--c:#27c3ff;animation-delay:.1s"><b id="s2">0</b><span>Goals ticked</span></div>
+<div class="st" style="--c:#2ecc71;animation-delay:.2s"><b id="s3">0</b><span>Best streak (days)</span></div>
+</div>
+<label class="start">📅 Start date <input type="date" id="sd"></label>
+</header>
+<div class="strip" id="strip"></div>
+<main class="card" id="card">
+<div class="top"><div><h2 id="dt"></h2><p id="dn"></p></div><button class="btn ghost" id="eb">✏️ Edit day</button></div>
+<div class="prog"><div class="bar"><div id="pf"></div></div><span id="pt"></span></div>
+<div id="list"></div>
+</main>
+<section class="reset card">
+<button class="btn danger" id="rs">🔄 Reset all progress</button>
+<p>Clears every tick for all 30 days. Your goal lists stay as they are.</p>
+</section>
+</div>
+<div id="ov"><div id="mb"></div></div>
+<script>
+const $=s=>document.querySelector(s);
+
+/* ============ EDIT YOUR DEFAULT GOALS HERE (one goal per line, keep the quotes and commas) ============ */
+const DEFAULT_TASKS=[
+"🏃 Exercise (20 minutes minimum)",
+"📖 Quran and its meaning (30 minutes)",
+"💻 Coding Practice (30 minutes minimum)",
+"🎬 Video Editing Practice (30 minutes minimum)",
+"🎨 Design Practice (30 minutes minimum)",
+"🔤 Learn 10-15 new English words",
+"📊 Microsoft Office Practice (Word, PowerPoint, Excel: 15 min each + 5 min break)",
+"✍️ Handwriting Practice (20 minutes minimum)",
+"📝 English Comprehension / Grammar (1 hour minimum)",
+"📚 Reading: any book (30 minutes)",
+"🗣️ English Language Practice (1 hour minimum)",
+"🔎 Research on any topic (30 minutes)",
+"💧 Drink 2 litres of mineral water",
+"⌨️ Typing Practice on PC (10 minutes)",
+"🤖 AI Research (30 minutes)"
+];
+const DAYS=30,KEY="dailygoals_v1";
+/* =============================================================================================== */
+
+const iso=d=>d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+const fresh=()=>({start:iso(new Date()),days:Array.from({length:DAYS},()=>DEFAULT_TASKS.map(x=>({x,d:0})))});
+let S,sel=0,editing=false;
+try{S=JSON.parse(localStorage.getItem(KEY));if(!S||!S.days||S.days.length!==DAYS)S=null}catch(e){S=null}
+S=S||fresh();
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const dd=i=>{const[y,m,d]=S.start.split("-").map(Number);return new Date(y,m-1,d+i)};
+const fm=(d,o)=>d.toLocaleDateString("en-US",o);
+const pr=i=>{const t=S.days[i];return t.length?t.filter(k=>k.d).length/t.length:0};
+const full=i=>S.days[i].length>0&&pr(i)===1;
+const ti=()=>{const n=new Date();return Math.round((new Date(n.getFullYear(),n.getMonth(),n.getDate())-dd(0))/864e5)};
+const clamp=()=>Math.min(DAYS-1,Math.max(0,ti()));
+
+function strip(){
+  $("#strip").innerHTML=Array.from({length:DAYS},(_,i)=>{const d=dd(i);
+    return `<button class="chip${i===sel?" on":""}${full(i)?" ok":""}${i===ti()?" now":""}" data-i="${i}" style="--h:${(i*12+300)%360}"><small>Day ${i+1}</small><b>${d.getDate()}</b><span>${fm(d,{weekday:"short"})} · ${fm(d,{month:"short"})}</span><i><u style="width:${Math.round(pr(i)*100)}%"></u></i></button>`}).join("");
+  const a=$(".chip.on");if(a)a.scrollIntoView({inline:"center",block:"nearest"});
+}
+function stats(){
+  let n=0,g=0,t=0,b=0,r=0;
+  for(let i=0;i<DAYS;i++){S.days[i].forEach(k=>{t++;g+=k.d});if(full(i)){n++;r++;b=Math.max(b,r)}else r=0}
+  $("#s1").textContent=n+" / "+DAYS;$("#s2").textContent=g+" / "+t;$("#s3").textContent=b;
+}
+function upd(){
+  const t=S.days[sel],n=t.filter(k=>k.d).length,p=t.length?Math.round(n/t.length*100):0;
+  $("#pf").style.width=p+"%";$("#pt").textContent=n+" / "+t.length+" goals done · "+p+"%";
+  $("#card").classList.toggle("full",full(sel));
+  const c=document.querySelectorAll(".chip")[sel];
+  if(c){c.querySelector("u").style.width=p+"%";c.classList.toggle("ok",full(sel))}
+  stats();
+}
+function view(){
+  $("#eb").textContent="✏️ Edit day";
+  $("#list").innerHTML=S.days[sel].map((k,i)=>`<label class="task${k.d?" done":""}" style="--h:${i*24};--i:${i}"><input type="checkbox" data-k="${i}"${k.d?" checked":""}><span class="box"><svg viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" pathLength="1"/></svg></span><span class="tx">${esc(k.x)}</span></label>`).join("")||'<p class="mu">No goals for this day yet. Tap Edit day to add some.</p>';
+}
+const row=(x,i,k)=>`<div class="ed" style="--h:${i*24};--i:${i}"><input class="ei" data-k="${k}" value="${esc(x)}" maxlength="140" placeholder="Type a goal"><button class="x" title="Remove goal">✕</button></div>`;
+function edit(){
+  $("#eb").textContent="✖ Cancel";
+  $("#list").innerHTML=S.days[sel].map((k,i)=>row(k.x,i,i)).join("")+`<button class="btn add" id="add">＋ Add goal</button><div class="apply"><label>Apply changes to <select id="sc"><option value="one">This day only</option><option value="fwd">This day + all following days</option><option value="all">All 30 days</option></select></label><button class="btn" id="sv">💾 Save changes</button></div>`;
+}
+function main(){
+  const d=dd(sel);
+  $("#dt").textContent=fm(d,{weekday:"long",month:"long",day:"numeric",year:"numeric"});
+  $("#dn").textContent="Day "+(sel+1)+" of "+DAYS+(sel===ti()?" · Today":"");
+  editing?edit():view();upd();
+}
+function saveEdit(){
+  const v=[...document.querySelectorAll(".ei")].map(e=>({x:e.value.trim(),k:+e.dataset.k})).filter(o=>o.x);
+  if(!v.length)return;
+  const sc=$("#sc").value,a=sc==="all"?0:sel,b=sc==="one"?sel:DAYS-1;
+  for(let j=a;j<=b;j++){const old=S.days[j];S.days[j]=v.map(o=>({x:o.x,d:o.k>=0&&old[o.k]?old[o.k].d:0}))}
+  save();editing=false;strip();main();
+}
+
+/* ---------- popups ---------- */
+const show=h=>{$("#mb").innerHTML=h;$("#ov").classList.add("on")};
+const hide=()=>$("#ov").classList.remove("on");
+function cele(){
+  show(`<div class="trophy">🏆</div><h3 class="grad">Congratulations!</h3><p>You completed all <b>${S.days[sel].length}</b> goals for <b>Day ${sel+1}</b> (${fm(dd(sel),{weekday:"long",month:"short",day:"numeric"})}). Amazing discipline! Keep the streak alive 🌟</p><button class="btn" data-c>Awesome!</button>`);
+  let k=0;const iv=setInterval(()=>{burst(0);burst(1);if(++k>5)clearInterval(iv)},380);
+}
+
+/* ---------- confetti cannons from both sides ---------- */
+const cv=$("#fx"),cx=cv.getContext("2d"),COL=["#ff4d8d","#ff9a3c","#ffd93d","#2ecc71","#27c3ff","#7a5cff","#ff5de0"];
+let P=[],run=0;
+const fit=()=>{cv.width=innerWidth;cv.height=innerHeight};fit();addEventListener("resize",fit);
+function burst(s){
+  for(let i=0;i<55;i++){
+    const a=(18+Math.random()*58)*Math.PI/180,v=11+Math.random()*14;
+    P.push({x:s?cv.width:0,y:cv.height*.68,vx:(s?-1:1)*Math.cos(a)*v,vy:-Math.sin(a)*v,w:6+Math.random()*7,h:4+Math.random()*6,r:Math.random()*6,vr:(Math.random()-.5)*.4,c:COL[i%COL.length],o:Math.random()<.3});
+  }
+  if(!run){run=1;loop()}
+}
+function loop(){
+  cx.clearRect(0,0,cv.width,cv.height);
+  P=P.filter(p=>p.y<cv.height+30);
+  P.forEach(p=>{p.vx*=.985;p.vy=p.vy*.985+.38;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;
+    cx.save();cx.translate(p.x,p.y);cx.rotate(p.r);cx.fillStyle=p.c;
+    if(p.o){cx.beginPath();cx.arc(0,0,p.w/2,0,7);cx.fill()}else cx.fillRect(-p.w/2,-p.h/2,p.w,p.h);
+    cx.restore()});
+  if(P.length)requestAnimationFrame(loop);else run=0;
+}
+
+/* ---------- events ---------- */
+$("#list").onchange=e=>{
+  const el=e.target;if(el.type!=="checkbox")return;
+  const was=full(sel);
+  S.days[sel][+el.dataset.k].d=el.checked?1:0;
+  el.closest(".task").classList.toggle("done",el.checked);
+  save();upd();
+  if(!was&&full(sel))setTimeout(cele,550);
+};
+$("#list").onclick=e=>{
+  const x=e.target.closest(".x");
+  if(x){const r=x.closest(".ed");r.classList.add("out");setTimeout(()=>r.remove(),250);return}
+  if(e.target.id==="add"){
+    e.target.insertAdjacentHTML("beforebegin",row("",document.querySelectorAll(".ed").length,-1));
+    const all=document.querySelectorAll(".ei");all[all.length-1].focus();
+  }
+  if(e.target.id==="sv")saveEdit();
+};
+$("#eb").onclick=()=>{editing=!editing;main()};
+$("#strip").onclick=e=>{
+  const c=e.target.closest(".chip");if(!c)return;
+  sel=+c.dataset.i;editing=false;
+  document.querySelectorAll(".chip").forEach((z,i)=>z.classList.toggle("on",i===sel));
+  c.scrollIntoView({inline:"center",block:"nearest",behavior:"smooth"});
+  const cd=$("#card");cd.classList.remove("swap");void cd.offsetWidth;cd.classList.add("swap");
+  main();
+};
+$("#sd").value=S.start;
+$("#sd").onchange=e=>{if(!e.target.value)return;S.start=e.target.value;save();sel=clamp();editing=false;strip();main()};
+$("#rs").onclick=()=>show(`<div class="big">🔄</div><h3>Reset all progress?</h3><p>Every tick for all 30 days will be cleared. Your goal lists stay as they are.</p><div class="acts"><button class="btn ghost" data-c>Cancel</button><button class="btn danger" id="yes">Yes, reset</button></div>`);
+$("#ov").onclick=e=>{
+  if(e.target.id==="ov"||e.target.closest("[data-c]"))hide();
+  if(e.target.id==="yes"){S.days.forEach(d=>d.forEach(k=>k.d=0));save();hide();strip();main()}
+};
+
+/* ---------- dark / light mode ---------- */
+function theme(m,keep){
+  document.documentElement.dataset.theme=m;
+  $("#th").classList.toggle("dk",m==="dark");
+  $("#th").setAttribute("aria-checked",m==="dark");
+  if(keep){try{localStorage.setItem(KEY+"_theme",m)}catch(e){}}
+}
+let tm=null;try{tm=localStorage.getItem(KEY+"_theme")}catch(e){}
+theme(tm||(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"));
+$("#th").onclick=()=>{
+  const m=document.documentElement.dataset.theme==="dark"?"light":"dark",go=()=>theme(m,1);
+  document.startViewTransition?document.startViewTransition(go):go();
+};
+
+sel=clamp();strip();main();
+</script>
+</body>
+</html>
